@@ -8,9 +8,9 @@ copy of example from datasheet.
 - included `library.json` so can be easily attached to other project with
 platformio library manager. Just add to `platformio.ini` the line:
 
-```bash
-lib_deps = https://github.com/zielaskowski/i2c
-```
+\begin{center}
+lib\_deps = https://github.com/zielaskowski/i2c
+\end{center}
 
 - minimum implementation to make it lightweight
 
@@ -33,8 +33,11 @@ error limit (~2%). Calculate UBRR from baud rate, round down and calculate
 back the baud rate:
 
 $$
+\begin{aligned}
 UBRR=\frac{F_{OSC}}{16 \cdot BAUD}+1
+\qquad\qquad
 BAUD=\frac{F_{OSC}}{16 \cdot (UBRR+1)}
+\end{aligned}
 $$
 
 - on ATmega328pb uses only USART0
