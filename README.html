@@ -1,0 +1,58 @@
+<h1 id="uart_m328pb">uart_m328pb</h1>
+<p>minimalistic UART interface for ATmega328p/pb for transmission only.
+Basicaly copy of example from datasheet.</p>
+<h2 id="main-features">main features</h2>
+<ul>
+<li>included <code>library.json</code> so can be easily attached to
+other project with platformio library manager. Just add to
+<code>platformio.ini</code> the line:</li>
+</ul>
+<p><span class="math display">$$
+\begin{center}
+lib_deps = https://github.com/zielaskowski/i2c
+\end{center}
+$$</span></p>
+<ul>
+<li>minimum implementation to make it lightweight</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">AVR</span> Memory Usage</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">----------------</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Device:</span> Unknown</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Program:</span>     228 bytes</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">.text</span> + .data + .bootloader<span class="kw">)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">Data:</span>          0 bytes</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">(</span><span class="ex">.data</span> + .bss + .noinit<span class="kw">)</span></span></code></pre></div>
+<ul>
+<li>no Arduino libs dependency</li>
+<li>only asynhronous transmission, 8bit+1bit stop, no parity check</li>
+<li>only single speed so pay atention on baud selection to not exceed
+error limit (~2%). Calculate UBRR from baud rate, round down and
+calculate back the baud rate:</li>
+</ul>
+<p><span class="math display">$$
+\begin{aligned}
+UBRR=\frac{F_{OSC}}{16 \cdot BAUD}+1
+\qquad\qquad
+BAUD=\frac{F_{OSC}}{16 \cdot (UBRR+1)}
+\end{aligned}
+$$</span></p>
+<ul>
+<li>on ATmega328pb uses only USART0</li>
+<li>library do not use interrupts, just loop until register can accept
+new data</li>
+</ul>
+<h2 id="usage">usage</h2>
+<p>Library provide just basic functions:</p>
+<ul>
+<li>initUART() - initialize chip registers for UART communication</li>
+<li>printUART(char data) - sends single byte of data</li>
+<li>printlnUART(const char *data) - sends string (MUST be ended with 0),
+finish with new line char.</li>
+</ul>
+<h2 id="example">example</h2>
+<p>Script sends sample text, just use network analyzer or see in
+terminal. Simply compile examples/main.cpp ([env:demo] in
+platformio.ini).</p>
