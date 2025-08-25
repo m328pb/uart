@@ -8,11 +8,11 @@ copy of example from datasheet.
 - included `library.json` so can be easily attached to other project with
 platformio library manager. Just add to `platformio.ini` the line:
 
-\begin{center}
+```bash
 lib\_deps = https://github.com/zielaskowski/i2c
-\end{center}
+```
 
-- minimum implementation to make it lightweight
+- minimum implementation to make it lightweight (no Arduino libs dependency)
 
 ```bash
 AVR Memory Usage
@@ -26,11 +26,10 @@ Data:          0 bytes
 (.data + .bss + .noinit)
 ```
 
-- no Arduino libs dependency
 - only asynhronous transmission, 8bit+1bit stop, no parity check
 - only single speed so pay atention on baud selection to not exceed
-error limit (~2%). Calculate UBRR from baud rate, round down and calculate
-back the baud rate:
+error limit (~2%). To caluclate error: calculate UBRR from baud rate,
+round down and calculate back the baud rate:
 
 $$
 \begin{aligned}
@@ -41,7 +40,9 @@ BAUD=\frac{F_{OSC}}{16 \cdot (UBRR+1)}
 $$
 
 - on ATmega328pb uses only USART0
-- library do not use interrupts, just loop until register can accept new data
+- library do not use interrupts, just loop until register can accept new data.
+So for low baud rates it's relatively slow. So for example if you want to write
+to serial everytime you send byte through I2C...expect pauses ;)
 
 ## usage
 
