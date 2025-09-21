@@ -4,8 +4,11 @@
  */
 #include "uart.h"
 int main() {
-  initUART();
-  printUART(0);
-  printlnUART("");
+  UART serial;
+  serial.init();
+  serial.init(9600);
+  serial.send(0);
+  serial.send_ln("");
+  serial.off();
   return 0;
 }

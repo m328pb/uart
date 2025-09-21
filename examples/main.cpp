@@ -6,7 +6,11 @@
 #include "uart.h"
 
 int main() {
-  initUART();
-  printlnUART("test_UART");
+  UART serial;
+  serial.init();
+  serial.send_ln("test_UART: 9600bps");
+  serial.init(76800);
+  serial.send_ln("test UART: 76800bps");
+  serial.off();
   return 0;
 }
