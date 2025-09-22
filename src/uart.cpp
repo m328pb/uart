@@ -1,7 +1,7 @@
 #include "uart.h"
 #include <avr/io.h>
 
-UART::UART(){}
+UART::UART() {}
 /*
  * @brief initialize interface with given baud rate
  * @param baud - baud rate
@@ -9,6 +9,7 @@ UART::UART(){}
  * there is no x2 mode so pay atention choosing the baud:
  * calculate integer of UBRR and back to baud to see the error
  * try to be below 2% see p.146 ATmega328P datasheet for formulas
+ * and p.165 ATmega328P for calculation
  * 9600bps 19200bps 38400bps 76800bps work fine for 16MHz
  */
 void UART::init(uint32_t baud) {
@@ -22,7 +23,7 @@ void UART::init(void) {
 
   // set UART baud rate generator for asynchronous mode
   // (p. 146 ATmega328p datasheet)
-  uint16_t baud_rate_reg = (uint16_t)F_CPU / ((16 * baud) - 1);
+  uint16_t baud_rate_reg = (uint16_t)((F_CPU / (16 * baud)) - 1);
   // asynchronous mode
   UBRR0H = (unsigned char)(baud_rate_reg >> 8);
   UBRR0L = (unsigned char)(baud_rate_reg);
@@ -42,7 +43,10 @@ void UART::init(void) {
   // USPOL0 - clock polarity, not used in asynchronous mode
   SREG = sreg;
 }
-
+/*
+ * @briefsend byte of data
+ * @param data - byte to send
+ */
 void UART::send(char data) {
   // Wait for empty transmit buffer
   do {
@@ -50,6 +54,10 @@ void UART::send(char data) {
   UDR0 = data; // send data
 }
 
+/*
+ * @brief send char string
+ * @params str - pointer to string to send. MUST terminate with 0x0
+ */
 void UART::send_ln(const char *str) {
   while (*str) {
     send(*str++);

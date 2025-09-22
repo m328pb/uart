@@ -40,9 +40,10 @@ BAUD=\frac{F_{OSC}}{16 \cdot (UBRR+1)}
 \end{aligned}
 $$
 
+...or see p.165 ATmega328p datasheet.
 following 9600bps 19200bps 38400bps 76800bps works fine for 16MHz
 
-- on ATmega328pb uses only USART0
+- uses only USART0
 - library do not use interrupts, just loop until register can accept new data.
 So for low baud rates it's relatively slow. So for example if you want to write
 to serial everytime you send byte through I2C...expect pauses ;)

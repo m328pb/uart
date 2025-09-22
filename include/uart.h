@@ -3,6 +3,7 @@
 #include <avr/io.h>
 
 #define BAUD 9600U // default baud rate
+		   // max 2Mbps, see README
 
 class UART {
 private:
