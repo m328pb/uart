@@ -2,20 +2,6 @@
 #include <avr/io.h>
 
 UART::UART() {}
-/*
- * @brief initialize interface with given baud rate
- * @param baud - baud rate
- * @details
- * there is no x2 mode so pay atention choosing the baud:
- * calculate integer of UBRR and back to baud to see the error
- * try to be below 2% see p.146 ATmega328P datasheet for formulas
- * and p.165 ATmega328P for calculation
- * 9600bps 19200bps 38400bps 76800bps work fine for 16MHz
- */
-void UART::init(uint32_t baud) {
-  this->baud = baud;
-  init();
-}
 
 void UART::init(void) {
   uint8_t sreg = SREG;
@@ -23,12 +9,13 @@ void UART::init(void) {
 
   // set UART baud rate generator for asynchronous mode
   // (p. 146 ATmega328p datasheet)
-  uint16_t baud_rate_reg = (uint16_t)((F_CPU / (16 * baud)) - 1);
-  // asynchronous mode
-  UBRR0H = (unsigned char)(baud_rate_reg >> 8);
-  UBRR0L = (unsigned char)(baud_rate_reg);
+  UBRR0H = (uint8_t)(UBRR >> 8);
+  UBRR0L = (uint8_t)UBRR;
 
-  UCSR0A &= ~(1 << U2X0); // single speed mode
+  if (!U2X)
+    UCSR0A &= ~(1 << U2X0); // single speed mode
+  else
+    UCSR0A |= (1 << U2X0); // double speed mode
 
   UCSR0B = (1 << TXEN0);                  // Enable UART transmitter
   UCSR0B &= ~(1 << RXEN0);                // Disable UART receiver
@@ -41,10 +28,12 @@ void UART::init(void) {
   // UPM01,UPM00 - parity disabled
   // USBS0 - 1-bit stop
   // USPOL0 - clock polarity, not used in asynchronous mode
+
   SREG = sreg;
 }
+
 /*
- * @briefsend byte of data
+ * @brief send byte of data
  * @param data - byte to send
  */
 void UART::send(char data) {

@@ -6,7 +6,6 @@
 int main() {
   UART serial;
   serial.init();
-  serial.init(9600);
   serial.send(0);
   serial.send_ln("");
   serial.off();
