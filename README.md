@@ -36,7 +36,7 @@ to serial everytime you send byte through I2C...expect pauses ;)
 ## usage
 
 Library provides class UART::UART() with following methods. To set baud
-change #define BAUD in uart.h.
+change #define UART_BAUD_RATE in uart.h or use compiler flag.
 
 - UART::init() - initialize chip registers for UART communication with default
 baud rate (9600bps), or other BAUD if defined

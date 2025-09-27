@@ -3,7 +3,7 @@
   - plug in network analyzer or simply use any terminal
  */
 #include "uart.h"
-#include <avr/delay.h>
+#include <util/delay.h>
 int main() {
   UART serial;
   while (1) {
