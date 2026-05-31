@@ -1,14 +1,14 @@
 [
     {
-        "command": "/home/mi/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/demo/examples/main.o -c -Wno-error=narrowing -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -pedantic -O3 -Os -DF_CPU=16000000L -DPLATFORMIO=60118 -DARDUINO_AVR_ATmega328P -Iinclude -Isrc -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include -I/home/mi/.platformio/packages/toolchain-atmelavr/avr/include examples/main.cpp",
+        "command": "/home/mi/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/demo_interrupt/examples/main_interrupt.o -c -Wno-error=narrowing -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328pb -Os -Wall -ffunction-sections -fdata-sections -flto -pedantic -O3 -Os -DF_CPU=16000000L -DPLATFORMIO=60118 -DARDUINO_AVR_ATmega328PB -DUART_BAUD_RATE=115200 -Iinclude -Isrc -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include -I/home/mi/.platformio/packages/toolchain-atmelavr/avr/include examples/main_interrupt.cpp",
         "directory": "/home/mi/docs/prog/MCU/libraries/uart",
-        "file": "examples/main.cpp",
-        "output": ".pio/build/demo/examples/main.o"
+        "file": "examples/main_interrupt.cpp",
+        "output": ".pio/build/demo_interrupt/examples/main_interrupt.o"
     },
     {
-        "command": "/home/mi/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/demo/src/uart.o -c -Wno-error=narrowing -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328p -Os -Wall -ffunction-sections -fdata-sections -flto -pedantic -O3 -Os -DF_CPU=16000000L -DPLATFORMIO=60118 -DARDUINO_AVR_ATmega328P -Iinclude -Isrc -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include -I/home/mi/.platformio/packages/toolchain-atmelavr/avr/include src/uart.cpp",
+        "command": "/home/mi/.platformio/packages/toolchain-atmelavr/bin/avr-g++ -o .pio/build/demo_interrupt/src/uart.o -c -Wno-error=narrowing -fno-exceptions -fno-threadsafe-statics -fpermissive -std=gnu++11 -mmcu=atmega328pb -Os -Wall -ffunction-sections -fdata-sections -flto -pedantic -O3 -Os -DF_CPU=16000000L -DPLATFORMIO=60118 -DARDUINO_AVR_ATmega328PB -DUART_BAUD_RATE=115200 -Iinclude -Isrc -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed -I/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include -I/home/mi/.platformio/packages/toolchain-atmelavr/avr/include src/uart.cpp",
         "directory": "/home/mi/docs/prog/MCU/libraries/uart",
         "file": "src/uart.cpp",
-        "output": ".pio/build/demo/src/uart.o"
+        "output": ".pio/build/demo_interrupt/src/uart.o"
     }
 ]

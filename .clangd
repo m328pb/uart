@@ -1,0 +1,20 @@
+CompileFlags:
+  Add: [
+    "--target=avr",
+    "-mmcu=atmega328pb",
+    "-isystem","/home/mi/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include"
+]
+
+Completion:
+  HeaderInsertion: Never
+
+---
+Diagnostics:
+  UnusedIncludes: Strict
+
+---
+If:
+  PathMatch: .*include/.*\.h$
+Diagnostics:
+  UnusedIncludes: None
+
