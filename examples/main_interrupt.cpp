@@ -3,12 +3,10 @@
  Using interrupt to not block execution
  - plug in network analyzer or simply use any terminal
  */
-#define USE_INTERRUPT 1
 
 #include "uart.h"
 #include <avr/interrupt.h>
 #include <util/delay.h>
-
 UART serial;
 
 uint8_t pow(uint8_t expo) {
@@ -39,6 +37,4 @@ int main() {
   return 0;
 }
 
-ISR(USART0_UDRE_vect) { // NOLINT
-  serial.isr();
-}
+ISR(USART0_UDRE_vect) { serial.isr(); }

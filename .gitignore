@@ -2,6 +2,7 @@
 .venv
 .pio
 .cache
+compile_commands.json
 # Prerequisites
 *.d
 

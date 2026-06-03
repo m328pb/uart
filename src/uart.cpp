@@ -21,6 +21,8 @@ void UART::init(void) {
   UCSR0B = (1 << TXEN0);                  // Enable UART transmitter
   UCSR0B &= ~(1 << RXEN0);                // Disable UART receiver
   UCSR0B &= ~(1 << UDRIE0);               // disable interrupts
+                                          // Interrupt version will enable
+                                          // interrupts ONLY when data in buffer
   UCSR0B &= ~(1 << TXCIE0);               // disable TX complete interrupt
   UCSR0B &= ~(1 << RXCIE0);               // disable RX complete interrupt
   UCSR0C = (1 << UCSZ01) | (1 << UCSZ00); // 8 data bits
@@ -31,6 +33,8 @@ void UART::init(void) {
   // USPOL0 - clock polarity, not used in asynchronous mode
 
   SREG = sreg;
+  if (USE_INTERRUPT)
+    sei();
 }
 
 /*
@@ -38,30 +42,32 @@ void UART::init(void) {
  * @param data - byte to send
  */
 void UART::send(char data) {
-  // Wait for empty transmit buffer
   if (!USE_INTERRUPT) {
     // do not use interrupts, just block and wait for TX register empty
-    do {
-    } while (!(UCSR0A & (1 << UDRE0)));
+    while (!(UCSR0A & (1 << UDRE0))) ;
     UDR0 = data; // send data
-  } else {
-    // use interrupts to not block
-    // will skip data when buffer overflow with speed in mind
-    uint8_t next = (buffer_head + 1) % BUFFER_SIZE;
-    if (next == buffer_tail) { // buffer full: drop
-      buffer[buffer_head] = '@';
+
+  } else {               // use interrupts to not block
+    if (buffer_full()) { // buffer full: drop
+      cli();
+      //move_head_back(8);
+      buffer_head  = buffer_tail;
+      const char *info = "!--overflow--!"; // try to leave info
+      while (*info) {
+        buffer_push(*info++);
+      };
+      sei();
     } else {
-      buffer[buffer_head] = data;
-      buffer_head = next;
+      buffer_push(data);
     }
     UCSR0B |= (1 << UDRIE0); // enable interrupt
   }
 }
 
-/*
- * @brief send char string
- * @params str - pointer to string to send. MUST terminate with 0x0
- */
+//
+// @brief send char string
+// @params str - pointer to string to send. MUST terminate with 0x0
+//
 void UART::send_ln(const char *str) {
   while (*str) {
     send(*str++);
@@ -69,23 +75,66 @@ void UART::send_ln(const char *str) {
   send('\n');
 }
 
+// function to be called from Interrupt vector
+// ISR(USART0_UDRE_vect){
+// 	uart.isr();
+// }
 void UART::isr() {
-  // function to be called from Interrupt vector
-  // ISR(USART0_UDRE_vect){
-  // 	uart.isr();
-  // }
-  if (buffer_head == buffer_tail) {
-    UDR0 = buffer[buffer_tail];
-    buffer_tail = (buffer_tail + 1) % BUFFER_SIZE;
-  } else {
-    // Turn off UART Data Register Empty interrupt
-    UCSR0B &= ~(1 << UDRIE0);
+  if (!buffer_empty()) // data in the buffer
+    buffer_pop();
+  else
+    UCSR0B &= ~(1 << UDRIE0); // buffer is empty
+                              // Turn off UART Data Register Empty interrupt
+}
+
+// add element to buffer and adjust head
+void UART::buffer_push(char c) {
+  if (buffer_full())
+    buffer[buffer_head] = c;
+  else {
+    uint8_t next = (buffer_head + 1) % BUFFER_SIZE;
+    buffer[buffer_head] = c;
+    buffer_head = next;
   }
 }
 
+// send element from buffer and adjust tail
+void UART::buffer_pop(void) {
+  UDR0 = buffer[buffer_tail];
+  buffer_tail = (buffer_tail + 1) % BUFFER_SIZE;
+}
+
+
+// return 1 if buffer is empty
+uint8_t UART::buffer_empty() {
+  if (buffer_head == buffer_tail) {
+    return 1; // empty
+  } else {
+    return 0; // not empty
+  }
+}
+
+// return 1 if buffer is full
+uint8_t UART::buffer_full(void) {
+  uint8_t next = (buffer_head + 1) % BUFFER_SIZE;
+  if (next == buffer_tail) {
+    return 1; // buffer full
+  } else {
+    return 0; // not full
+  }
+}
+
+// turn off UART interface
+// send all data before shutting down
 void UART::off() {
-  // Wait for empty transmit buffer
-  do {
-  } while (!(UCSR0A & (1 << UDRE0)));
+  if (USE_INTERRUPT) {
+    // Wait for empty transmit buffer
+    while (!buffer_empty())
+      ;
+  } else {
+    // or just send last char
+    do {
+    } while (!(UCSR0A & (1 << UDRE0)));
+  }
   UCSR0B &= ~(1 << TXEN0); // Disable UART transmitter
 }
