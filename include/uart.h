@@ -38,13 +38,13 @@ public:
   void send_ln(const char *str);
   void isr(void);
   uint8_t buffer_empty(void);
-  uint8_t buffer_full(void);
   void off();
 
 private:
   volatile char buffer[BUFFER_SIZE];
   volatile uint8_t buffer_head = 0;
   volatile uint8_t buffer_tail = 0;
+  uint8_t buffer_full(void);
   void buffer_pop(void);
   void buffer_push(char);
 };

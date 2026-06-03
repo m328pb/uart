@@ -1,6 +1,6 @@
 {
 	"name": "uart",
-	"version": "0.9.0",
+	"version": "0.9.9",
 	"description":"Minimal UART protocol for ATmega328pb/p. Intended to make it maximum lightweight",
 	"keywords":"uart, usart, atmega328, avr",
 	"repository":{

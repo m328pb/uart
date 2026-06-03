@@ -21,7 +21,19 @@ AVR Memory Usage
 ----------------
 Device: Unknown
 
-Program:     262bytes
+Program:     388bytes
+(.text + .data + .bootloader)
+
+Data:          0 bytes
+(.data + .bss + .noinit)
+```
+
+```pad_code
+AVR Memory Usage (interrupt version)
+----------------
+Device: Unknown
+
+Program:     796bytes
 (.text + .data + .bootloader)
 
 Data:          0 bytes
@@ -64,6 +76,7 @@ baud rate (9600bps), or other BAUD if defined
 - UART::send(char data) - sends single byte of data
 - UART::send_ln(const char *data) - sends string (MUST be ended with 0), finish
 with new line char.
+- UART::buffer_empty() - return 1 when all data from buffer send
 - UART::isr() - function to be called from within Interrupt Routine (ISR)
 - UART::off()
 

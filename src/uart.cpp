@@ -44,14 +44,15 @@ void UART::init(void) {
 void UART::send(char data) {
   if (!USE_INTERRUPT) {
     // do not use interrupts, just block and wait for TX register empty
-    while (!(UCSR0A & (1 << UDRE0))) ;
+    while (!(UCSR0A & (1 << UDRE0)))
+      ;
     UDR0 = data; // send data
 
   } else {               // use interrupts to not block
     if (buffer_full()) { // buffer full: drop
       cli();
-      //move_head_back(8);
-      buffer_head  = buffer_tail;
+      // move_head_back(8);
+      buffer_head = buffer_tail;
       const char *info = "!--overflow--!"; // try to leave info
       while (*info) {
         buffer_push(*info++);
@@ -104,9 +105,10 @@ void UART::buffer_pop(void) {
   buffer_tail = (buffer_tail + 1) % BUFFER_SIZE;
 }
 
-
 // return 1 if buffer is empty
 uint8_t UART::buffer_empty() {
+  if (!USE_INTERRUPT)
+    return 1;
   if (buffer_head == buffer_tail) {
     return 1; // empty
   } else {
