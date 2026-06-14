@@ -48,3 +48,5 @@ private:
   void buffer_pop(void);
   void buffer_push(char);
 };
+
+extern UART uart;
