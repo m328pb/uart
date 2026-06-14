@@ -49,4 +49,3 @@ private:
   void buffer_push(char);
 };
 
-extern UART uart;
